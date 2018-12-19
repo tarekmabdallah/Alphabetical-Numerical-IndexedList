@@ -22,7 +22,7 @@ public class IndexedListFragment extends Fragment {
 
 
     private ListView listView;
-    private String letters = "A,B,C,D,E,F,G,H,Y,Z";
+    private String letters = "A,B,C,D";//,E,F,G,H,Y,Z";
     private List<String> lettersList = new ArrayList<>(Arrays.asList(letters.split(",")));
 
     @Override
@@ -44,12 +44,26 @@ public class IndexedListFragment extends Fragment {
     private List<Section> getSections (){
         List<Section> sections = new ArrayList<>();
         for (int i = 0; i < lettersList.size() ; i++) {
-            Section section = new Section(lettersList.get(i)+i,i);
-            for (int j = 0; j < 9 ; j++) {
-                section.getChildes().add(new ListItem(lettersList.get(j)+j,j));
-                sections.add(section);
-            }
+            Section section = new Section(lettersList.get(i),i);
+            sections.add(section);
         }
+        for (int i = 0; i < 10 ; i++) {
+            sections.get(0).getChildes().add(new ListItem("A" + i, i));
+        }
+        for (int i = 0; i < 10 ; i++) {
+            sections.get(1).getChildes().add(new ListItem("B" + i, i));
+        }
+        for (int i = 0; i < 10 ; i++) {
+            sections.get(2).getChildes().add(new ListItem("C" + i, i));
+        }
+        for (int i = 0; i < 10 ; i++) {
+            sections.get(3).getChildes().add(new ListItem("D" + i, i));
+        }
+//        for (Section section: sections) {
+//            for (int j = 0; j < 10; j++) {
+//                section.getChildes().add(new ListItem(section.getName() + j, j));
+//            }
+//        }
         return sections;
     }
 }
