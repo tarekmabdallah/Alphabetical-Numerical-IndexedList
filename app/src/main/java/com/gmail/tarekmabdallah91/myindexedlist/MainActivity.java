@@ -1,7 +1,7 @@
 package com.gmail.tarekmabdallah91.myindexedlist;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
