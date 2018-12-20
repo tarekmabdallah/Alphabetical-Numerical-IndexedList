@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.models;
+package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
 
-public class SectionIndexedList extends RowInList {
-    private final String text;
+import android.view.View;
 
-    public SectionIndexedList(String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
+public interface IndexedListListener {
+    void onClickListItem(View v, int position, long id);
 }
