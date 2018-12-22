@@ -22,7 +22,7 @@ import java.util.List;
 
 import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ZERO;
 
-public class IndexedList {
+public final class IndexedList {
 
     private String LIST_INDICES = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
     private boolean isAlphabetical = true;
@@ -43,7 +43,7 @@ public class IndexedList {
     private int resColorIdForDimmedItems = android.R.color.darker_gray;
     private int resBackgroundColorIdStrip = android.R.color.transparent;
     private IndexedListFragment indexedListFragment;
-    private List contacts;
+    private List items;
     private IndexedListListener indexedListListener;
     private IndexedListAdapter indexedListAdapter;
     private int resBackgroundColor = android.R.color.white;
@@ -71,8 +71,8 @@ public class IndexedList {
                 .commit();
     }
 
-    List getContacts() {
-        return contacts;
+    List getItems() {
+        return items;
     }
 
     IndexedListListener getIndexedListListener() {
@@ -215,8 +215,8 @@ public class IndexedList {
         indexedListFragment.setIndexedList(this);
     }
 
-    public IndexedList setListContacts(List contacts) {
-        this.contacts = contacts;
+    public IndexedList seItemsList(List items) {
+        this.items = items;
         return this;
     }
 
@@ -256,5 +256,17 @@ public class IndexedList {
     public IndexedList setResColorStrip(int resColorStrip) {
         this.resColorStrip = resColorStrip;
         return this;
+    }
+
+    /**
+     * must be called in onStop to avoid IllegalStateException
+     */
+    public void onDestroy (){
+        try {
+            indexedList.finalize();
+            indexedList = null;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 }

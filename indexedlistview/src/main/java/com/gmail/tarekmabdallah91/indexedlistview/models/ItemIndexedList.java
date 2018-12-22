@@ -16,7 +16,7 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class ItemIndexedList extends RowInList {
+public final class ItemIndexedList extends RowInList {
     private String categoryName;
     private int index;
 

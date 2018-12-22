@@ -37,7 +37,7 @@ import java.util.Objects;
 
 
 @SuppressWarnings("unchecked")
-public class IndexedListFragment extends ListFragment {
+public final class IndexedListFragment extends ListFragment {
 
     private TextView sectionStrip;
     private LinearLayout sideIndex;
@@ -117,7 +117,7 @@ public class IndexedListFragment extends ListFragment {
     }
 
     private void setListByData() {
-        presenter.setRows(getListView(),indexedList.getContacts());
+        presenter.setRows(getListView(),indexedList.getItems());
     }
 
     public void setIndexedList(IndexedList indexedList) {

@@ -16,7 +16,7 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class TempIndexItem {
+public final class TempIndexItem {
 
     private String letter;
 

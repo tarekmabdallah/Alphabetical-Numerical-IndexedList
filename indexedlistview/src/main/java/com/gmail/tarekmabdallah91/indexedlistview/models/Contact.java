@@ -16,7 +16,7 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class Contact {
+public final class Contact {
 
     private final String name;
 

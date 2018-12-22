@@ -16,7 +16,7 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class SectionIndexedList extends RowInList {
+public final class SectionIndexedList extends RowInList {
     private final String text;
 
     public SectionIndexedList(String text) {

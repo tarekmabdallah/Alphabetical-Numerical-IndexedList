@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-class IndexedListPresenter {
+final class IndexedListPresenter {
 
     static final int ZERO =0;
     static final int ONE = 1;
@@ -115,17 +115,14 @@ class IndexedListPresenter {
 
     private void setNumericalIndices (){
         alphabet = new ArrayList<>();
-        int start = ZERO, end;
         String previousLetter = null;
         TempIndexItem tmpIndexItem;
         for (int i = ZERO; i < LIST_LETTERS.size(); i++) {
             String firstLetter = LIST_LETTERS.get(i);
             // If we've changed to a new letter, add the previous letter to the alphabet scroller
             if (previousLetter != null && !firstLetter.equals(previousLetter)) {
-                end = rows.size() - ONE;
                 tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK));
                 alphabet.add(tmpIndexItem);
-                start = end + ONE;
             }
             // Check if we need to add a header row
             if (!firstLetter.equals(previousLetter)) {
@@ -142,7 +139,8 @@ class IndexedListPresenter {
 
     void setRows(ListView listView,List rows) {
         this.rows = rows;
-        indexedListAdapter.setRows(getListOfContactsAndSections(rows));
+        if (indexedList.isAlphabetical())indexedListAdapter.setRows(getAlphabeticalListOfContactsAndSections(rows));
+        else indexedListAdapter.setRows(getNumericalListOfContactsAndSections(rows));
         listView.setAdapter(indexedListAdapter);
         updateSideIndex();
     }
@@ -215,7 +213,7 @@ class IndexedListPresenter {
         }
     }
 
-    private List getListOfContactsAndSections(List contactsList) {
+    private List getAlphabeticalListOfContactsAndSections(List contactsList) {
         final Pattern NON_LETTER_PATTERN = Pattern.compile("[^a-zA-Z]");
         listOfContactsAndSections = new ArrayList<>();
         List<RowInList> tempList = new ArrayList<>();
@@ -233,7 +231,7 @@ class IndexedListPresenter {
                    Contact contact = (Contact) contactsList.get(ZERO);
                    String contactFirstLetter = contact.getName().substring(ZERO, ONE);
                    ItemIndexedList item = new ItemIndexedList(contact.getName(), ZERO);
-                   if (indexedList.isAlphabetical() && NON_LETTER_PATTERN.matcher(contactFirstLetter).matches()){
+                   if (NON_LETTER_PATTERN.matcher(contactFirstLetter).matches()){
                        // it is not letter - so add it under the # section
                        hashSectionChildes.add(item);
                        contactsList.remove(ZERO);
@@ -273,7 +271,50 @@ class IndexedListPresenter {
                 listOfContactsAndSections.add(item);
             }catch (ClassCastException ignored){ // will catch exceptions about casting SectionIndexedList
                 SectionIndexedList section = (SectionIndexedList) tempList.get(i);
-                if (occurrences.get(section.getText()) > ZERO) listOfContactsAndSections.add(section);
+                try{
+                    if (occurrences.get(section.getText()) > ZERO) listOfContactsAndSections.add(section);
+                }catch (NullPointerException ignore){}
+            }
+        }
+        return(listOfContactsAndSections);
+    }
+
+    private List getNumericalListOfContactsAndSections(List contactsList) {
+        listOfContactsAndSections = new ArrayList<>();
+        List<RowInList> tempList = new ArrayList<>();
+        final int contactListSize = contactsList.size();
+        int numberInSection;
+        int index = ZERO;
+        for (RowInList section : sectionsList) {
+            numberInSection = Integer.parseInt(((SectionIndexedList) section).getText());
+            int occurrence = ZERO;
+            tempList.add(section);
+            for (int i = ZERO; i < contactListSize ; i++) {
+                try {
+                    Contact contact = (Contact) contactsList.get(ZERO);
+                    int itemNumber = Integer.parseInt(contact.getName().substring(ZERO,TWO).trim());
+                    ItemIndexedList item = new ItemIndexedList(contact.getName(), ZERO);
+                    if (numberInSection == itemNumber) {
+                        ++occurrence;
+                        tempList.add(item);
+                        contactsList.remove(ZERO);
+                    }
+                }catch (RuntimeException ignored){
+                    // maybe catch that exception many times, depending on the num of contacts in each section - ignore it
+                }
+            }
+            occurrences.put(String.valueOf(numberInSection), occurrence);
+        }
+        for (int i = ZERO; i < tempList.size() ; i++) {
+            try {
+                ItemIndexedList item = (ItemIndexedList) tempList.get(i);
+                item.setIndex(index++);
+                listOfContactsAndSections.add(item);
+            }catch (ClassCastException ignored){ // will catch exceptions about casting SectionIndexedList
+                SectionIndexedList section = (SectionIndexedList) tempList.get(i);
+                try{
+                    if (occurrences.get(section.getText()) > ZERO) listOfContactsAndSections.add(section);
+                }catch (NullPointerException ignore){}
             }
         }
         return(listOfContactsAndSections);
