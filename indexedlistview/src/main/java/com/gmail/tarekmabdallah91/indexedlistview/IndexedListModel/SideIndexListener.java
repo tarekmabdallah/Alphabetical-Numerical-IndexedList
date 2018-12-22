@@ -1,4 +1,4 @@
-package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
+package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
 import android.util.Pair;
 

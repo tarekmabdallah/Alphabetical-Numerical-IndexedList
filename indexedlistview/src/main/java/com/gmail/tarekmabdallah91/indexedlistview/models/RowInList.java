@@ -14,26 +14,6 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.models;
+package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class ItemIndexedList extends RowInList {
-    private String categoryName;
-    private int index;
-
-    public ItemIndexedList(String text, int index) {
-        this.categoryName = text;
-        this.index = index;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-}
+public abstract class RowInList {}

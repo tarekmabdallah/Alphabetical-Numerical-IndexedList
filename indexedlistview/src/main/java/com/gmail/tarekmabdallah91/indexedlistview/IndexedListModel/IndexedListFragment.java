@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
+package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -24,14 +24,14 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gmail.tarekmabdallah91.myindexedlist.R;
+
+import com.gmail.tarekmabdallah91.indexedlistview.R;
 
 import java.util.Objects;
 

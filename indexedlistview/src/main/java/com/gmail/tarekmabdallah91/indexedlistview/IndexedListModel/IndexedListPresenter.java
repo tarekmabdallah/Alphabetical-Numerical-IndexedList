@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
+package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -28,12 +27,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.gmail.tarekmabdallah91.myindexedlist.R;
-import com.gmail.tarekmabdallah91.myindexedlist.models.ItemIndexedList;
-import com.gmail.tarekmabdallah91.myindexedlist.models.Contact;
-import com.gmail.tarekmabdallah91.myindexedlist.models.RowInList;
-import com.gmail.tarekmabdallah91.myindexedlist.models.SectionIndexedList;
-import com.gmail.tarekmabdallah91.myindexedlist.models.TempIndexItem;
+import com.gmail.tarekmabdallah91.indexedlistview.R;
+import com.gmail.tarekmabdallah91.indexedlistview.models.ItemIndexedList;
+import com.gmail.tarekmabdallah91.indexedlistview.models.Contact;
+import com.gmail.tarekmabdallah91.indexedlistview.models.RowInList;
+import com.gmail.tarekmabdallah91.indexedlistview.models.SectionIndexedList;
+import com.gmail.tarekmabdallah91.indexedlistview.models.TempIndexItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

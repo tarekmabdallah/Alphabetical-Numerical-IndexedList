@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.models;
+package com.gmail.tarekmabdallah91.indexedlistview.models;
 
 public class SectionIndexedList extends RowInList {
     private final String text;

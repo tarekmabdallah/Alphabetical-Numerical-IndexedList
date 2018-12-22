@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
+package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -23,14 +23,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.gmail.tarekmabdallah91.myindexedlist.R;
-import com.gmail.tarekmabdallah91.myindexedlist.models.ItemIndexedList;
-import com.gmail.tarekmabdallah91.myindexedlist.models.RowInList;
-import com.gmail.tarekmabdallah91.myindexedlist.models.SectionIndexedList;
+
+import com.gmail.tarekmabdallah91.indexedlistview.R;
+import com.gmail.tarekmabdallah91.indexedlistview.models.ItemIndexedList;
+import com.gmail.tarekmabdallah91.indexedlistview.models.RowInList;
+import com.gmail.tarekmabdallah91.indexedlistview.models.SectionIndexedList;
 import java.util.List;
-import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListPresenter.ONE;
-import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListPresenter.TWO;
-import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListPresenter.ZERO;
+import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ONE;
+import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.TWO;
+import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ZERO;
 
 public class IndexedListAdapter extends BaseAdapter {
 

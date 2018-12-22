@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.models;
+package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
-public abstract class RowInList {}
+import android.view.View;
+
+public interface IndexedListListener {
+    void onClickListItem(View v, int position, long id);
+}

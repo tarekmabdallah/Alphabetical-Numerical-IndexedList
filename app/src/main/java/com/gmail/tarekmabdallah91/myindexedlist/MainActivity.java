@@ -22,10 +22,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedList;
-import com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListListener;
-import com.gmail.tarekmabdallah91.myindexedlist.models.ItemIndexedList;
-import com.gmail.tarekmabdallah91.myindexedlist.models.Contact;
+import com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedList;
+import com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListListener;
+import com.gmail.tarekmabdallah91.indexedlistview.models.Contact;
+import com.gmail.tarekmabdallah91.indexedlistview.models.ItemIndexedList;
 
 import java.util.ArrayList;
 import java.util.Arrays;

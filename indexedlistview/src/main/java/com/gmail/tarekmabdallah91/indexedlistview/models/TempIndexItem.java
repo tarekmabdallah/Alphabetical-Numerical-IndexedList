@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
+package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-import android.view.View;
+public class TempIndexItem {
 
-public interface IndexedListListener {
-    void onClickListItem(View v, int position, long id);
+    private String letter;
+
+    public TempIndexItem(String letter) {
+        this.letter = letter;
+    }
+
+    public String getLetter() {
+        return letter;
+    }
+
 }

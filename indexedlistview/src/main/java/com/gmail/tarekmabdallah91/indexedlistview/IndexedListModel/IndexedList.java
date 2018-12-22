@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
+package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListPresenter.ZERO;
+import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ZERO;
 
 public class IndexedList {
 

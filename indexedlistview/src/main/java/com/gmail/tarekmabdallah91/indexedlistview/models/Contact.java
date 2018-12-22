@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.gmail.tarekmabdallah91.myindexedlist.models;
+package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class TempIndexItem {
+public class Contact {
 
-    private String letter;
+    private final String name;
 
-    public TempIndexItem(String letter) {
-        this.letter = letter;
+    public Contact(String name) {
+        this.name = name;
     }
 
-    public String getLetter() {
-        return letter;
+    public String getName() {
+        return name;
     }
 
 }
