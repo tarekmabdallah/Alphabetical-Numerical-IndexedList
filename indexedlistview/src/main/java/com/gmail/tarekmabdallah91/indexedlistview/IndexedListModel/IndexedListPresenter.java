@@ -85,7 +85,6 @@ final class IndexedListPresenter {
 
     private void setAlphabeticalIndices() {
         alphabet = new ArrayList<>();
-        int start = ZERO, end;
         String previousLetter = null;
         TempIndexItem tmpIndexItem;
         final Pattern NUMBERS_PATTERN = Pattern.compile("[0-9]");
@@ -324,7 +323,8 @@ final class IndexedListPresenter {
         View view = listView.getChildAt(ZERO);
         ItemIndexedList itemIndexedList = (ItemIndexedList) view.getTag();
         String name = itemIndexedList.getCategoryName();
-        return name.substring(ZERO, ONE);
+        if (indexedList.isAlphabetical())return name.substring(ZERO, ONE);
+        else return name.substring(ZERO, TWO);
     }
 
     void setSideIndexListener(SideIndexListener sideIndexListener) {
