@@ -39,7 +39,6 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public class IndexedListFragment extends ListFragment {
 
-    private static float sideIndexY;
     private TextView sectionStrip;
     private LinearLayout sideIndex;
     private IndexedListPresenter presenter;
@@ -61,7 +60,6 @@ public class IndexedListFragment extends ListFragment {
         setPresenter();
         setSectionStrip();
         setListView();
-        setSideIndex();
     }
 
     private void setListView (){
@@ -89,24 +87,15 @@ public class IndexedListFragment extends ListFragment {
 
     public void setPresenter() {
         presenter = new IndexedListPresenter(indexedList,sideIndex);
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    public void setSideIndex() {
-        sideIndex.setOnTouchListener(new View.OnTouchListener() {
+        presenter.setSideIndexListener(new SideIndexListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // now you know coordinates of touch
-                sideIndexY = event.getY();
-                // and can display a proper item it country list
-                Pair pair =  presenter.scrollToSelectedSection(sideIndexY);
+            public void onClickIndexListener(Pair pair) {
                 if (null != pair){
                     String letter = (String) pair.first;
                     int indexTop = (int) pair.second;
                     getListView().setSelection(indexTop);
                     setTextToSectionStrip(letter);
                 }
-                return false;
             }
         });
     }

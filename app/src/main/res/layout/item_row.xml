@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<TextView android:id="@+id/section_letter_tv"
+<TextView android:id="@+id/row_tv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/space8"

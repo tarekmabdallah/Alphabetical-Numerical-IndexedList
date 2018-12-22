@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.gmail.tarekmabdallah91.myindexedlist.R;
-import com.gmail.tarekmabdallah91.myindexedlist.models.CategoryIndexedList;
+import com.gmail.tarekmabdallah91.myindexedlist.models.ItemIndexedList;
 import com.gmail.tarekmabdallah91.myindexedlist.models.RowInList;
 import com.gmail.tarekmabdallah91.myindexedlist.models.SectionIndexedList;
 import java.util.List;
@@ -32,7 +32,7 @@ import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedL
 import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListPresenter.TWO;
 import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListPresenter.ZERO;
 
-public class AlphabetListAdapter extends BaseAdapter {
+public class IndexedListAdapter extends BaseAdapter {
 
     private List rows;
     private IndexedList indexedList;
@@ -75,13 +75,13 @@ public class AlphabetListAdapter extends BaseAdapter {
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (inflater != null) {
-                view = inflater.inflate(R.layout.row_section, parent, false);
+                view = inflater.inflate(R.layout.item_row, parent, false);
             }
         }
         if (view != null){
-            TextView textView = view.findViewById(R.id.section_letter_tv);
+            TextView textView = view.findViewById(R.id.row_tv);
             if (itemViewType == ZERO) { // Item
-                final CategoryIndexedList currentCategory = (CategoryIndexedList) getItem(position);
+                final ItemIndexedList currentCategory = (ItemIndexedList) getItem(position);
                 name = currentCategory.getCategoryName();
                 if (name!= null) {
                     textView.setText(name);

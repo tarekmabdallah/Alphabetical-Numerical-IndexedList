@@ -18,17 +18,18 @@ package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.gmail.tarekmabdallah91.myindexedlist.models.CategoryIndexedList;
+import com.gmail.tarekmabdallah91.myindexedlist.R;
+import com.gmail.tarekmabdallah91.myindexedlist.models.ItemIndexedList;
 import com.gmail.tarekmabdallah91.myindexedlist.models.Contact;
 import com.gmail.tarekmabdallah91.myindexedlist.models.RowInList;
 import com.gmail.tarekmabdallah91.myindexedlist.models.SectionIndexedList;
@@ -46,16 +47,16 @@ class IndexedListPresenter {
     static final int ZERO =0;
     static final int ONE = 1;
     static final int TWO = 2;
-    private static final int TWENTY = 20;
+    private static final String HASH = "#";
     private List rows;
     private List<TempIndexItem> alphabet;
     private List<RowInList> sectionsList;
     private List<String> LIST_LETTERS ;
     private final HashMap<String, Integer> occurrences = new HashMap<>();
-    private int indexListSize;
-    private AlphabetListAdapter alphabetListAdapter;
+    private SideIndexListener sideIndexListener;
+    private IndexedListAdapter indexedListAdapter;
     private Context context;
-    private List listOfContactsAndSections;
+    private List<RowInList> listOfContactsAndSections;
     private LinearLayout sideIndex;
     private IndexedList indexedList;
 
@@ -65,36 +66,65 @@ class IndexedListPresenter {
         this.sideIndex = sideIndex;
         rows = new ArrayList(); // for sections and items
         setListLetters();
-        setAlphabeticalList();
+        if (indexedList.isAlphabetical()) setAlphabeticalIndices();
+        else setNumericalIndices();
         setSectionsList();
-        setAlphabetListAdapter();
+        setIndexedListAdapter();
     }
 
     private void setListLetters() {
-        LIST_LETTERS = new ArrayList<>(Arrays.asList(indexedList.getLIST_INDICATORS().split(",")));
+        LIST_LETTERS = new ArrayList<>(Arrays.asList(indexedList.getLIST_INDICES().split(",")));
     }
 
-    private void setAlphabetListAdapter() {
-        alphabetListAdapter = new AlphabetListAdapter();
-        alphabetListAdapter.setIndexedList(indexedList);
+    private void setIndexedListAdapter() {
+        indexedListAdapter = indexedList.getIndexedListAdapter();
+        if (null == indexedListAdapter){
+            indexedListAdapter = new IndexedListAdapter();
+        }
+        indexedListAdapter.setIndexedList(indexedList);
     }
 
-    private void setAlphabeticalList() {
+    private void setAlphabeticalIndices() {
         alphabet = new ArrayList<>();
         int start = ZERO, end;
         String previousLetter = null;
         TempIndexItem tmpIndexItem;
-        Pattern numberPattern = Pattern.compile("[0-9]");
+        final Pattern NUMBERS_PATTERN = Pattern.compile("[0-9]");
         for (int i = ZERO; i < LIST_LETTERS.size(); i++) {
             String firstLetter = LIST_LETTERS.get(i);
             // Group numbers together in the scroller
-            if (numberPattern.matcher(firstLetter).matches()) {
-                firstLetter = "#";
+            if (NUMBERS_PATTERN.matcher(firstLetter).matches()) {
+                firstLetter = HASH;
             }
             // If we've changed to a new letter, add the previous letter to the alphabet scroller
             if (previousLetter != null && !firstLetter.equals(previousLetter)) {
+                tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK));
+                alphabet.add(tmpIndexItem);
+            }
+            // Check if we need to add a header row
+            if (!firstLetter.equals(previousLetter)) {
+                rows.add(new SectionIndexedList(firstLetter));
+            }
+            previousLetter = firstLetter;
+        }
+        if (previousLetter != null) {
+            // Save the last letter
+            tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK));
+            alphabet.add(tmpIndexItem);
+        }
+    }
+
+    private void setNumericalIndices (){
+        alphabet = new ArrayList<>();
+        int start = ZERO, end;
+        String previousLetter = null;
+        TempIndexItem tmpIndexItem;
+        for (int i = ZERO; i < LIST_LETTERS.size(); i++) {
+            String firstLetter = LIST_LETTERS.get(i);
+            // If we've changed to a new letter, add the previous letter to the alphabet scroller
+            if (previousLetter != null && !firstLetter.equals(previousLetter)) {
                 end = rows.size() - ONE;
-                tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK), start, end);
+                tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK));
                 alphabet.add(tmpIndexItem);
                 start = end + ONE;
             }
@@ -106,84 +136,65 @@ class IndexedListPresenter {
         }
         if (previousLetter != null) {
             // Save the last letter
-            tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK), start, rows.size() - ONE);
+            tmpIndexItem = new TempIndexItem(previousLetter.toUpperCase(Locale.UK));
             alphabet.add(tmpIndexItem);
         }
     }
 
     void setRows(ListView listView,List rows) {
         this.rows = rows;
-        alphabetListAdapter.setRows(getListOfContactsAndSections(rows));
-        listView.setAdapter(alphabetListAdapter);
+        indexedListAdapter.setRows(getListOfContactsAndSections(rows));
+        listView.setAdapter(indexedListAdapter);
         updateSideIndex();
     }
 
-    Pair scrollToSelectedSection(float sideIndexY) {
-        int sideIndexHeight = sideIndex.getHeight();
-        // compute number of pixels for every side index item
-        double pixelPerIndexItem = (double) sideIndexHeight / indexListSize;
-        // compute the item index for given event position belongs to
-        int itemPosition = (int) (sideIndexY / pixelPerIndexItem);
-        // get the item (we can do it since we know item index)
-        if (itemPosition < alphabet.size()) {
-            TempIndexItem indexItem = alphabet.get(itemPosition);
-            if (hasChildes(indexItem)) {
-                try {
-                    if (!sectionsList.isEmpty()) {
-                        SectionIndexedList sectionIndexedList = new SectionIndexedList(indexItem.getLetter());
-                        for (int i = ZERO; i < listOfContactsAndSections.size(); i++) {
-                            if (listOfContactsAndSections.get(i) instanceof SectionIndexedList) {
-                                SectionIndexedList indexedList = (SectionIndexedList) listOfContactsAndSections.get(i);
-                                if (sectionIndexedList.getText().equals(indexedList.getText())) {
-                                    return new Pair(sectionIndexedList.getText(), i+ ONE);
-                                }
-                            }
+    private Pair scrollToSelectedSection(String letter) {
+        try {
+            if (!sectionsList.isEmpty()) {
+                SectionIndexedList sectionIndexedList = new SectionIndexedList(letter);
+                for (int i = ZERO; i < listOfContactsAndSections.size(); i++) {
+                    if (listOfContactsAndSections.get(i) instanceof SectionIndexedList) {
+                        SectionIndexedList indexedList = (SectionIndexedList) listOfContactsAndSections.get(i);
+                        if (sectionIndexedList.getText().equals(indexedList.getText())) {
+                            return new Pair(sectionIndexedList.getText(), i + ONE);
                         }
                     }
-                } catch (NullPointerException ignored) {}
+                }
             }
-        }
+        } catch (NullPointerException ignored) {}
         return null;
     }
 
     private void setSideIndex(){
-        int indexListSize = alphabet.size();
-        if (indexListSize < ONE) {
-            return;
-        }
-        int indexMaxSize = (int) Math.floor(sideIndex.getHeight() / TWENTY);
-        int tmpIndexListSize = indexListSize;
-        while (tmpIndexListSize > indexMaxSize) {
-            tmpIndexListSize = tmpIndexListSize / TWO;
-        }
-        double delta;
-        if (tmpIndexListSize > ZERO) {
-            delta = indexListSize / tmpIndexListSize;
-        } else {
-            delta = ONE;
-        }
-        TextView tmpTV;
-        for (double i = ONE; i <= indexListSize; i = i + delta) {
-            TempIndexItem tmpIndexItem = alphabet.get((int) i - ONE);
-            String tmpLetter = tmpIndexItem.getLetter();
-            tmpTV = new TextView(context);
+        int resColorId;
+        int paddingValue = (int) context.getResources().getDimension(R.dimen.space4);
+        for (int i = ZERO; i <= alphabet.size()- ONE; i++) {
+            TempIndexItem tmpIndexItem = alphabet.get(i);
+            final String tmpLetter = tmpIndexItem.getLetter();
+            TextView tmpTV = new TextView(context);
             tmpTV.setText(tmpLetter);
+            tmpTV.setPadding(paddingValue,ZERO,paddingValue,ZERO);
+            tmpTV.setGravity(Gravity.CENTER);
             tmpTV.setTextSize(setTextScaleInPx(indexedList.getItemsSizeSideIndex()));
             if (hasChildes(tmpIndexItem)) {
-                tmpTV.setTextColor(context.getResources().getColor(indexedList.getResColorIdForUnDimmedItems()));
+                resColorId = indexedList.getResColorIdForUnDimmedItems();
             } else {
-                tmpTV.setTextColor(context.getResources().getColor(indexedList.getResColorIdForDimmedItems()));
+                resColorId = indexedList.getResColorIdForDimmedItems();
             }
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-            tmpTV.setLayoutParams(params);
+            tmpTV.setTextColor(ContextCompat.getColor(context, resColorId));
+            tmpTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   Pair pair = scrollToSelectedSection(tmpLetter);
+                   sideIndexListener.onClickIndexListener(pair);
+                }
+            });
             sideIndex.addView(tmpTV);
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void updateSideIndex() {
         sideIndex.removeAllViews();
-        indexListSize = alphabet.size();
         setSideIndex();
     }
 
@@ -206,39 +217,78 @@ class IndexedListPresenter {
     }
 
     private List getListOfContactsAndSections(List contactsList) {
-        listOfContactsAndSections = new ArrayList();
+        final Pattern NON_LETTER_PATTERN = Pattern.compile("[^a-zA-Z]");
+        listOfContactsAndSections = new ArrayList<>();
+        List<RowInList> tempList = new ArrayList<>();
+        List<RowInList> hashSectionChildes = new ArrayList<>();
         final int contactListSize = contactsList.size();
         String firstLetterInSection;
         int index = ZERO;
+        // loop for all items in section list to add each section then add it's items in a tempList
         for (RowInList section : sectionsList) {
             firstLetterInSection = ((SectionIndexedList) section).getText().substring(ZERO, ONE);
             int occurrence = ZERO;
-            listOfContactsAndSections.add(section);
+            tempList.add(section);
             for (int i = ZERO; i < contactListSize ; i++) {
                try {
                    Contact contact = (Contact) contactsList.get(ZERO);
-                   String designerFirstLetter = contact.getName().substring(ZERO, ONE);
-                   if (firstLetterInSection.equals(designerFirstLetter)) {
-                       ++occurrence;
-                       listOfContactsAndSections.add(new CategoryIndexedList(contact.getName(), index));
-                       index++;
+                   String contactFirstLetter = contact.getName().substring(ZERO, ONE);
+                   ItemIndexedList item = new ItemIndexedList(contact.getName(), ZERO);
+                   if (indexedList.isAlphabetical() && NON_LETTER_PATTERN.matcher(contactFirstLetter).matches()){
+                       // it is not letter - so add it under the # section
+                       hashSectionChildes.add(item);
                        contactsList.remove(ZERO);
+                   }else {
+                       if (firstLetterInSection.equals(contactFirstLetter)) { // it is letter
+                           ++occurrence;
+                           tempList.add(item);
+                           contactsList.remove(ZERO);
+                       }
                    }
-               }catch (RuntimeException e){ // maybe catch that exception many times, depending on the num of contacts in each section
-                   Log.e(getClass().getSimpleName(),e.getMessage());
+               }catch (RuntimeException ignored){
+                   // maybe catch that exception many times, depending on the num of contacts in each section - ignore it
                }
             }
             occurrences.put(firstLetterInSection, occurrence);
-            if (occurrence == ZERO) listOfContactsAndSections.remove(section);
+        }
+        // move all items to the listOfContactsAndSections which will be passed to the adapter - the hash section in the first if it isn't empty
+        if (!hashSectionChildes.isEmpty()){
+            hashSectionChildes.add(ZERO, new SectionIndexedList(HASH));
+            alphabet.add(ZERO, new TempIndexItem(HASH));
+            for (int i = ZERO; i < hashSectionChildes.size() ; i++) {
+                try{
+                    ItemIndexedList item = (ItemIndexedList) hashSectionChildes.get(i);
+                    item.setIndex(index++);
+                    listOfContactsAndSections.add(item);
+                }catch (ClassCastException ignored){
+                    SectionIndexedList section = (SectionIndexedList) hashSectionChildes.get(i);
+                    listOfContactsAndSections.add(section);
+                }
+            }
+            occurrences.put(HASH,hashSectionChildes.size());
+        }
+        for (int i = ZERO; i < tempList.size() ; i++) {
+            try {
+                ItemIndexedList item = (ItemIndexedList) tempList.get(i);
+                item.setIndex(index++);
+                listOfContactsAndSections.add(item);
+            }catch (Exception ignored){ // will catch exceptions about casting SectionIndexedList
+                SectionIndexedList section = (SectionIndexedList) tempList.get(i);
+                if (occurrences.get(section.getText()) > ZERO) listOfContactsAndSections.add(section);
+            }
         }
         return(listOfContactsAndSections);
     }
 
     String getTopItemName(ListView listView) throws NullPointerException,ClassCastException{
         View view = listView.getChildAt(ZERO);
-        CategoryIndexedList categoryIndexedList = (CategoryIndexedList) view.getTag();
-        String name = categoryIndexedList.getCategoryName();
+        ItemIndexedList itemIndexedList = (ItemIndexedList) view.getTag();
+        String name = itemIndexedList.getCategoryName();
         return name.substring(ZERO, ONE);
+    }
+
+    void setSideIndexListener(SideIndexListener sideIndexListener) {
+        this.sideIndexListener = sideIndexListener;
     }
 
     private int setTextScaleInPx(float size) {

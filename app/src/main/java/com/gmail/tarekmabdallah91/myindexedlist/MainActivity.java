@@ -19,13 +19,12 @@ package com.gmail.tarekmabdallah91.myindexedlist;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedList;
 import com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedListListener;
-import com.gmail.tarekmabdallah91.myindexedlist.models.CategoryIndexedList;
+import com.gmail.tarekmabdallah91.myindexedlist.models.ItemIndexedList;
 import com.gmail.tarekmabdallah91.myindexedlist.models.Contact;
 
 import java.util.ArrayList;
@@ -34,8 +33,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static String LATIN_ALPHABET = "#,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+    private final static String LATIN_ALPHABET = "A,B,C,D,E,F,G,H,I";
+    private final static String NUMERICAL_LIST = "1,2,3,4,5,6,7,8,9";
     private  List<String> LIST_LETTERS = new ArrayList<>(Arrays.asList(LATIN_ALPHABET.split(",")));
+    private  List<String> LIST_NUMBERS = new ArrayList<>(Arrays.asList(NUMERICAL_LIST.split(",")));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         IndexedList.getInstance(this)
                 .setResFrameLayout(R.id.list_fragment)
-                .setListContacts(getDesignersList())
+                .setNumericalList(NUMERICAL_LIST)
+                .setListContacts(getDaysList())
+             //   .setAlphabeticalList(LATIN_ALPHABET)
+               // .setListContacts(getDesignersList())
                 .setDimmedColorInSideIndex(android.R.color.holo_red_dark)
                 .setItemsSizeSideIndex(10f)
                 .setItemsTextSize(12f)
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClickListItem(View v, int position, long id) {
                         try {
-                            CategoryIndexedList tag = (CategoryIndexedList) v.getTag();
+                            ItemIndexedList tag = (ItemIndexedList) v.getTag();
                             if (null != tag) {
                                 Toast.makeText(getBaseContext(), tag.getCategoryName(), Toast.LENGTH_LONG).show();
                             }
@@ -80,6 +84,21 @@ public class MainActivity extends AppCompatActivity {
                 contacts.add(new Contact(letter + i));
             }
         }
+        contacts.add(new Contact("@@@"));
+        contacts.add(new Contact("55555"));
         return contacts;
+    }
+
+    private List<Contact> getDaysList() {
+        List<Contact> days = new ArrayList<>();
+        List<String> newListLetters = LIST_NUMBERS;
+        // remove some letters to be dimmed in the sideList
+        for (String letter : newListLetters) {
+            int NUMBER_OF_ITEMS_IN_SECTION = 10;
+            for (int i = 1; i <= NUMBER_OF_ITEMS_IN_SECTION; i++) {
+                days.add(new Contact(letter + i));
+            }
+        }
+        return days;
     }
 }

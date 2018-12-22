@@ -16,10 +16,7 @@
 
 package com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel;
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
-
-import com.gmail.tarekmabdallah91.myindexedlist.R;
 
 import java.util.List;
 
@@ -27,7 +24,8 @@ import static com.gmail.tarekmabdallah91.myindexedlist.IndexedListModel.IndexedL
 
 public class IndexedList {
 
-    private String LIST_INDICATORS = "#,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+    private String LIST_INDICES = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+    private boolean isAlphabetical = true;
     private AppCompatActivity activity;
     private int resFrameLayout;
     private float stripTextSize = 18f;
@@ -47,6 +45,7 @@ public class IndexedList {
     private IndexedListFragment indexedListFragment;
     private List contacts;
     private IndexedListListener indexedListListener;
+    private IndexedListAdapter indexedListAdapter;
     private int resBackgroundColor = android.R.color.white;
     @SuppressLint("StaticFieldLeak")
     private static volatile IndexedList indexedList = null;
@@ -144,8 +143,31 @@ public class IndexedList {
         return resColorStrip;
     }
 
-    public String getLIST_INDICATORS() {
-        return LIST_INDICATORS;
+    IndexedListAdapter getIndexedListAdapter() {
+        return indexedListAdapter;
+    }
+
+    public void setIndexedListAdapter(IndexedListAdapter indexedListAdapter) {
+        this.indexedListAdapter = indexedListAdapter;
+    }
+
+    boolean isAlphabetical() {
+        return isAlphabetical;
+    }
+
+    public IndexedList setAlphabeticalList(String alphabeticalList) {
+        LIST_INDICES = alphabeticalList;
+        return this;
+    }
+
+    public IndexedList setNumericalList(String numericalList) {
+        LIST_INDICES = numericalList;
+        isAlphabetical = false;
+        return this;
+    }
+
+    String getLIST_INDICES() {
+        return LIST_INDICES;
     }
 
     public IndexedList setDimmedColorInSideIndex(int resColorIdForDimmedItems){
@@ -233,11 +255,6 @@ public class IndexedList {
 
     public IndexedList setResColorStrip(int resColorStrip) {
         this.resColorStrip = resColorStrip;
-        return this;
-    }
-
-    public IndexedList setListIndicators(String listIndicators) {
-        LIST_INDICATORS = listIndicators;
         return this;
     }
 }

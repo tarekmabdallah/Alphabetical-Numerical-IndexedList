@@ -22,7 +22,7 @@
     android:background="@color/list_fragment_background"
     android:baselineAligned="false">
 
-    <include layout="@layout/row_section"
+    <include layout="@layout/item_row"
         android:id="@+id/section_strip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +35,7 @@
         android:fastScrollEnabled="false"
         android:clipToPadding="false"
         android:paddingEnd="@dimen/side_index_width"
+        android:layout_marginEnd="@dimen/side_index_width"
         android:scrollbars="none"
         android:layout_below="@id/section_strip"
         tools:ignore="RtlSymmetry" />

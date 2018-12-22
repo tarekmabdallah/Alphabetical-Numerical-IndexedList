@@ -20,7 +20,7 @@ public class TempIndexItem {
 
     private String letter;
 
-    public TempIndexItem(String letter, int start, int end) {
+    public TempIndexItem(String letter) {
         this.letter = letter;
     }
 
