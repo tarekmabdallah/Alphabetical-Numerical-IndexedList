@@ -272,7 +272,7 @@ class IndexedListPresenter {
                 ItemIndexedList item = (ItemIndexedList) tempList.get(i);
                 item.setIndex(index++);
                 listOfContactsAndSections.add(item);
-            }catch (Exception ignored){ // will catch exceptions about casting SectionIndexedList
+            }catch (ClassCastException ignored){ // will catch exceptions about casting SectionIndexedList
                 SectionIndexedList section = (SectionIndexedList) tempList.get(i);
                 if (occurrences.get(section.getText()) > ZERO) listOfContactsAndSections.add(section);
             }
