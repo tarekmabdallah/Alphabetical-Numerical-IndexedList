@@ -147,8 +147,9 @@ public final class IndexedList {
         return indexedListAdapter;
     }
 
-    public void setIndexedListAdapter(IndexedListAdapter indexedListAdapter) {
+    public IndexedList setIndexedListAdapter(IndexedListAdapter indexedListAdapter) {
         this.indexedListAdapter = indexedListAdapter;
+        return this;
     }
 
     boolean isAlphabetical() {

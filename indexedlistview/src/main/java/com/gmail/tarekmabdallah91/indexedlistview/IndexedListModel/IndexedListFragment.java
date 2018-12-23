@@ -35,6 +35,8 @@ import com.gmail.tarekmabdallah91.indexedlistview.R;
 
 import java.util.Objects;
 
+import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ONE;
+
 
 @SuppressWarnings("unchecked")
 public final class IndexedListFragment extends ListFragment {
@@ -60,6 +62,7 @@ public final class IndexedListFragment extends ListFragment {
         setPresenter();
         setSectionStrip();
         setListView();
+
     }
 
     private void setListView (){
@@ -78,11 +81,10 @@ public final class IndexedListFragment extends ListFragment {
                 try {
                     String letter = presenter.getTopItemName(getListView());
                     setTextToSectionStrip(letter);
-                } catch (NullPointerException | ClassCastException e) {
-                    Log.e(getClass().getSimpleName(), e.getMessage());
-                }
+                } catch (NullPointerException | ClassCastException ignored) { }
             }
         });
+        getListView().setSelection(ONE); // to hide first section by default
     }
 
     public void setPresenter() {
@@ -113,7 +115,8 @@ public final class IndexedListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        indexedList.getIndexedListListener().onClickListItem(v,position,id);
+        if (null != indexedList.getIndexedListListener())
+            indexedList.getIndexedListListener().onClickListItem(v,position,id);
     }
 
     private void setListByData() {

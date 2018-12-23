@@ -16,9 +16,11 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public final class ItemIndexedList extends RowInList {
+public class ItemIndexedList extends RowInList {
     private String categoryName;
     private int index;
+
+    public ItemIndexedList(){}
 
     public ItemIndexedList(String text, int index) {
         this.categoryName = text;
@@ -35,5 +37,9 @@ public final class ItemIndexedList extends RowInList {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }
