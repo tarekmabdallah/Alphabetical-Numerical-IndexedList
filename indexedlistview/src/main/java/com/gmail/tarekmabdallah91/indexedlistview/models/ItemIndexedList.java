@@ -23,9 +23,8 @@ public class ItemIndexedList extends RowInList {
 
     public ItemIndexedList(){}
 
-    public ItemIndexedList(String name, int index) {
+    public ItemIndexedList(String name) {
         this.name = name;
-        this.index = index;
     }
 
     public String getName() {

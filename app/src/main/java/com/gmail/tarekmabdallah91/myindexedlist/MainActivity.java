@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedList;
 import com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListListener;
-import com.gmail.tarekmabdallah91.indexedlistview.models.Contact;
 import com.gmail.tarekmabdallah91.indexedlistview.models.ItemIndexedList;
 
 import java.util.ArrayList;
@@ -71,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
                 .start();
     }
 
-    private List<Contact> getDesignersList() {
-        List<Contact> contacts = new ArrayList<>();
+    private List<ItemIndexedList> getDesignersList() {
+        List<ItemIndexedList> contacts = new ArrayList<>();
         List<String> newListLetters = LIST_LETTERS;
         // remove some letters to be dimmed in the sideList
         newListLetters.remove("E");
@@ -81,22 +80,22 @@ public class MainActivity extends AppCompatActivity {
         for (String letter : newListLetters) {
             int NUMBER_OF_ITEMS_IN_SECTION = 10;
             for (int i = 1; i <= NUMBER_OF_ITEMS_IN_SECTION; i++) {
-                contacts.add(new Contact(letter + i));
+                contacts.add(new ItemIndexedList(letter + i));
             }
         }
-        contacts.add(new Contact("@@@"));
-        contacts.add(new Contact("55555"));
+        contacts.add(new ItemIndexedList("@@@"));
+        contacts.add(new ItemIndexedList("55555"));
         return contacts;
     }
 
-    private List<Contact> getDaysList() {
-        List<Contact> days = new ArrayList<>();
+    private List<ItemIndexedList> getDaysList() {
+        List<ItemIndexedList> days = new ArrayList<>();
         List<String> newListLetters = LIST_NUMBERS;
         // remove some letters to be dimmed in the sideList
         for (String letter : newListLetters) {
             int NUMBER_OF_ITEMS_IN_SECTION = 10;
             for (int i = 1; i <= NUMBER_OF_ITEMS_IN_SECTION; i++) {
-                days.add(new Contact(letter + i));
+                days.add(new ItemIndexedList(letter + i));
             }
         }
         return days;

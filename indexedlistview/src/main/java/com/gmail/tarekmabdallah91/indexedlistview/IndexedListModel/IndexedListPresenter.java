@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.gmail.tarekmabdallah91.indexedlistview.R;
 import com.gmail.tarekmabdallah91.indexedlistview.models.ItemIndexedList;
-import com.gmail.tarekmabdallah91.indexedlistview.models.Contact;
 import com.gmail.tarekmabdallah91.indexedlistview.models.RowInList;
 import com.gmail.tarekmabdallah91.indexedlistview.models.SectionIndexedList;
 import com.gmail.tarekmabdallah91.indexedlistview.models.TempIndexItem;
@@ -228,9 +227,9 @@ final class IndexedListPresenter {
             tempList.add(section);
             for (int i = ZERO; i < contactListSize; i++) {
                 try {
-                    Contact contact = (Contact) contactsList.get(ZERO);
+                    ItemIndexedList contact = (ItemIndexedList) contactsList.get(ZERO);
                     String contactFirstLetter = contact.getParent();
-                    ItemIndexedList item = new ItemIndexedList(contact.getName(), ZERO);
+                    ItemIndexedList item = new ItemIndexedList(contact.getName());
                     item.setParent(contact.getParent());
                     if (NON_LETTER_PATTERN.matcher(contactFirstLetter).matches()) {
                         // it is not letter - so add it under the # section
@@ -294,9 +293,9 @@ final class IndexedListPresenter {
             tempList.add(section);
             for (int i = ZERO; i < contactListSize; i++) {
                 try {
-                    Contact contact = (Contact) contactsList.get(ZERO);
+                    ItemIndexedList contact = (ItemIndexedList) contactsList.get(ZERO);
                     int itemNumber = Integer.parseInt(contact.getParent());
-                    ItemIndexedList item = new ItemIndexedList(contact.getName(), ZERO);
+                    ItemIndexedList item = new ItemIndexedList(contact.getName());
                     item.setParent(contact.getParent());
                     if (numberInSection == itemNumber) {
                         ++occurrence;
