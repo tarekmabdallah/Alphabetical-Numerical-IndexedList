@@ -83,7 +83,7 @@ public class IndexedListAdapter extends BaseAdapter {
             TextView textView = view.findViewById(R.id.row_tv);
             if (itemViewType == ZERO) { // Item
                 final ItemIndexedList currentCategory = (ItemIndexedList) getItem(position);
-                name = currentCategory.getCategoryName();
+                name = currentCategory.getName();
                 if (name!= null) {
                     textView.setText(name);
                     textView.setTextSize(indexedList.getItemsTextSize());

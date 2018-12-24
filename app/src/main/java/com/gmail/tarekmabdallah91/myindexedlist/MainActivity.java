@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             ItemIndexedList tag = (ItemIndexedList) v.getTag();
                             if (null != tag) {
-                                Toast.makeText(getBaseContext(), tag.getCategoryName(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(), tag.getName(), Toast.LENGTH_LONG).show();
                             }
                         } catch (NumberFormatException | IndexOutOfBoundsException ignored) {}
                     }

@@ -19,6 +19,7 @@ package com.gmail.tarekmabdallah91.indexedlistview.models;
 public final class Contact {
 
     private final String name;
+    private String parent;
 
     public Contact(String name) {
         this.name = name;
@@ -26,6 +27,14 @@ public final class Contact {
 
     public String getName() {
         return name;
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 
 }
