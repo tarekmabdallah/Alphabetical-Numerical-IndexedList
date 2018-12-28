@@ -17,6 +17,7 @@
 package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -45,13 +46,16 @@ public final class IndexedListFragment extends ListFragment {
     private LinearLayout sideIndex;
     private IndexedListPresenter presenter;
     private IndexedList indexedList;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_indexed_list, container, false);
         sideIndex = root.findViewById(R.id.sideIndex);
         sectionStrip = root.findViewById(R.id.section_strip);
-        root.setBackgroundColor(Objects.requireNonNull(getContext()).getResources().getColor(indexedList.getResBackgroundColor()));
+        context = getContext();
+        if (null != context)
+            root.setBackgroundColor(context.getResources().getColor(indexedList.getResBackgroundColor()));
         return root;
     }
 
@@ -108,8 +112,8 @@ public final class IndexedListFragment extends ListFragment {
 
     private void setSectionStrip(){
         sectionStrip.setTextSize(indexedList.getSectionTextSize());
-        sectionStrip.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()), indexedList.getResColorStrip()));
-        sectionStrip.setBackgroundColor(ContextCompat.getColor(getContext(), indexedList.getResBackgroundColorIdStrip()));
+        sectionStrip.setTextColor(ContextCompat.getColor(context, indexedList.getResColorStrip()));
+        sectionStrip.setBackgroundColor(ContextCompat.getColor(context, indexedList.getResBackgroundColorIdStrip()));
     }
 
     @Override
