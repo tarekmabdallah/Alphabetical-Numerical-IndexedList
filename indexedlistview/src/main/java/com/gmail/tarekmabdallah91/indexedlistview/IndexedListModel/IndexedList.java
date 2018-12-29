@@ -71,6 +71,11 @@ public final class IndexedList {
                 .commit();
     }
 
+    public void notifyDataChanges(){
+        setIndexedListFragment();
+        start();
+    }
+
     List getItems() {
         return items;
     }
