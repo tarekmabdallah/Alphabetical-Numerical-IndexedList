@@ -15,18 +15,31 @@
  */
 
 package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
+
 import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
 import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ZERO;
 
-public final class IndexedList {
-
+@SuppressWarnings("FinalizeCalledExplicitly")
+public final class IndexedList implements Parcelable {
     private String LIST_INDICES = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
     private boolean isAlphabetical = true;
-    private AppCompatActivity activity;
+    public static final Creator<IndexedList> CREATOR = new Creator<IndexedList>() {
+        @Override
+        public IndexedList createFromParcel(Parcel in) {
+            return new IndexedList(in);
+        }
+
+        @Override
+        public IndexedList[] newArray(int size) {
+            return new IndexedList[size];
+        }
+    };
     private int resFrameLayout;
     private float stripTextSize = 18f;
     private float sectionTextSize = 18f;
@@ -50,12 +63,35 @@ public final class IndexedList {
     @SuppressLint("StaticFieldLeak")
     private static volatile IndexedList indexedList = null;
 
-    private IndexedList(AppCompatActivity activity){
+    private IndexedList(AppCompatActivity activity) {
         this.activity = activity;
     }
 
-    public static IndexedList getInstance(AppCompatActivity activity){
-        if (null == indexedList){
+    private AppCompatActivity activity;
+
+    private IndexedList(Parcel in) {
+        LIST_INDICES = in.readString();
+        isAlphabetical = in.readByte() != 0;
+        resFrameLayout = in.readInt();
+        stripTextSize = in.readFloat();
+        sectionTextSize = in.readFloat();
+        itemsTextSize = in.readFloat();
+        itemsSizeSideIndex = in.readFloat();
+        paddingLeft = in.readInt();
+        paddingRight = in.readInt();
+        paddingTop = in.readInt();
+        paddingBottom = in.readInt();
+        resColorItem = in.readInt();
+        resColorSection = in.readInt();
+        resColorStrip = in.readInt();
+        resColorIdForUnDimmedItems = in.readInt();
+        resColorIdForDimmedItems = in.readInt();
+        resBackgroundColorIdStrip = in.readInt();
+        resBackgroundColor = in.readInt();
+    }
+
+    public static IndexedList getInstance(AppCompatActivity activity) {
+        if (null == indexedList) {
             synchronized (IndexedList.class) {
                 indexedList = new IndexedList(activity);
             }
@@ -63,17 +99,15 @@ public final class IndexedList {
         return indexedList;
     }
 
-    public void start(){
+    public void start() {
         setIndexedListFragment();
-        activity.getSupportFragmentManager()
-                .beginTransaction()
-                .add(resFrameLayout,indexedListFragment)
-                .commit();
-    }
-
-    public void notifyDataChanges(){
-        setIndexedListFragment();
-        start();
+        try {
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(resFrameLayout, indexedListFragment)
+                    .commit();
+        } catch (IllegalStateException ignored) {
+        }
     }
 
     List getItems() {
@@ -136,10 +170,6 @@ public final class IndexedList {
         return paddingBottom;
     }
 
-    float getStripTextSize() {
-        return stripTextSize;
-    }
-
     int getResBackgroundColorIdStrip() {
         return resBackgroundColorIdStrip;
     }
@@ -161,11 +191,6 @@ public final class IndexedList {
         return isAlphabetical;
     }
 
-    public IndexedList setAlphabeticalList(String alphabeticalList) {
-        LIST_INDICES = alphabeticalList;
-        return this;
-    }
-
     public IndexedList setNumericalList(String numericalList) {
         LIST_INDICES = numericalList;
         isAlphabetical = false;
@@ -175,6 +200,85 @@ public final class IndexedList {
     String getLIST_INDICES() {
         return LIST_INDICES;
     }
+
+    private void setIndexedListFragment() {
+        indexedListFragment = new IndexedListFragment();
+        indexedListFragment.setIndexedList(this);
+    }
+
+    public IndexedList seItemsList(List items) {
+        this.items = items;
+        return this;
+    }
+
+    public IndexedList setResFrameLayout(int resFrameLayout) {
+        this.resFrameLayout = resFrameLayout;
+        return this;
+    }
+
+    public IndexedList setResBackgroundColorIdStrip(int resBackgroundColorIdStrip) {
+        this.resBackgroundColorIdStrip = resBackgroundColorIdStrip;
+        return this;
+    }
+
+    public IndexedList setResColorStrip(int resColorStrip) {
+        this.resColorStrip = resColorStrip;
+        return this;
+    }
+
+    /**
+     * must be called in onStop to avoid IllegalStateException
+     */
+    public void onDestroy() {
+        try {
+            indexedList.finalize();
+            indexedList = null;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(LIST_INDICES);
+        dest.writeByte((byte) (isAlphabetical ? 1 : 0));
+        dest.writeInt(resFrameLayout);
+        dest.writeFloat(stripTextSize);
+        dest.writeFloat(sectionTextSize);
+        dest.writeFloat(itemsTextSize);
+        dest.writeFloat(itemsSizeSideIndex);
+        dest.writeInt(paddingLeft);
+        dest.writeInt(paddingRight);
+        dest.writeInt(paddingTop);
+        dest.writeInt(paddingBottom);
+        dest.writeInt(resColorItem);
+        dest.writeInt(resColorSection);
+        dest.writeInt(resColorStrip);
+        dest.writeInt(resColorIdForUnDimmedItems);
+        dest.writeInt(resColorIdForDimmedItems);
+        dest.writeInt(resBackgroundColorIdStrip);
+        dest.writeInt(resBackgroundColor);
+    }
+
+    public void notifyDataChanges() {
+        setIndexedListFragment();
+        start();
+    }
+
+    float getStripTextSize() {
+        return stripTextSize;
+    }
+
+    public IndexedList setAlphabeticalList(String alphabeticalList) {
+        LIST_INDICES = alphabeticalList;
+        return this;
+    }
+
 
     public IndexedList setDimmedColorInSideIndex(int resColorIdForDimmedItems){
         this.resColorIdForDimmedItems = resColorIdForDimmedItems;
@@ -216,21 +320,6 @@ public final class IndexedList {
         return this;
     }
 
-    private void setIndexedListFragment() {
-        indexedListFragment = new IndexedListFragment();
-        indexedListFragment.setIndexedList(this);
-    }
-
-    public IndexedList seItemsList(List items) {
-        this.items = items;
-        return this;
-    }
-
-    public IndexedList setResFrameLayout(int resFrameLayout) {
-        this.resFrameLayout = resFrameLayout;
-        return this;
-    }
-
     public IndexedList setIndexedListListener(IndexedListListener indexedListListener) {
         this.indexedListListener = indexedListListener;
         return this;
@@ -252,27 +341,5 @@ public final class IndexedList {
     public IndexedList setResColorIdForDimmedItems(int resColorIdForDimmedItems) {
         this.resColorIdForDimmedItems = resColorIdForDimmedItems;
         return this;
-    }
-
-    public IndexedList setResBackgroundColorIdStrip(int resBackgroundColorIdStrip) {
-        this.resBackgroundColorIdStrip = resBackgroundColorIdStrip;
-        return this;
-    }
-
-    public IndexedList setResColorStrip(int resColorStrip) {
-        this.resColorStrip = resColorStrip;
-        return this;
-    }
-
-    /**
-     * must be called in onStop to avoid IllegalStateException
-     */
-    public void onDestroy (){
-        try {
-            indexedList.finalize();
-            indexedList = null;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
     }
 }

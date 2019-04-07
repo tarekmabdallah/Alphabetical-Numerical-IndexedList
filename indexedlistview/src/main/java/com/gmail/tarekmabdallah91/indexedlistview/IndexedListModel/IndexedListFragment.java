@@ -16,13 +16,12 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,19 +33,21 @@ import android.widget.TextView;
 
 import com.gmail.tarekmabdallah91.indexedlistview.R;
 
-import java.util.Objects;
-
 import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ONE;
 
 
 @SuppressWarnings("unchecked")
 public final class IndexedListFragment extends ListFragment {
 
+    private final static String INDEXED_LIST = "INDEXED_LIST";
+    private final static String POSITION = "POSITION";
     private TextView sectionStrip;
     private LinearLayout sideIndex;
     private IndexedListPresenter presenter;
+    private IndexedListAdapter.KeepScrollPosition keepScrollPosition;
     private IndexedList indexedList;
     private Context context;
+    private static int position = ONE;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,22 +55,43 @@ public final class IndexedListFragment extends ListFragment {
         sideIndex = root.findViewById(R.id.sideIndex);
         sectionStrip = root.findViewById(R.id.section_strip);
         context = getContext();
-        if (null != context)
+        if (null != savedInstanceState) {
+            indexedList = savedInstanceState.getParcelable(INDEXED_LIST);
+            position = savedInstanceState.getInt(POSITION);
+        }
+        if (null != context && null != indexedList)
             root.setBackgroundColor(context.getResources().getColor(indexedList.getResBackgroundColor()));
         return root;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        keepScrollPosition = new IndexedListAdapter.KeepScrollPosition() {
+            @Override
+            public int getCurrentPosition() {
+                position = getListView().getFirstVisiblePosition();
+                return position;
+            }
+
+            @Override
+            public void scrollToPosition(int position) {
+                getListView().setSelection(position);
+            }
+        };
         setPresenter();
         setSectionStrip();
         setListView();
-
     }
 
-    private void setListView (){
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(INDEXED_LIST, indexedList);
+        outState.putInt(POSITION, getListView().getFirstVisiblePosition());
+        super.onSaveInstanceState(outState);
+    }
+
+    private void setListView() {
         final ListView listView = getListView();
         listView.setPadding(indexedList.getPaddingLeft(),
                 indexedList.getPaddingTop(),
@@ -78,25 +100,27 @@ public final class IndexedListFragment extends ListFragment {
         setListByData();
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {}
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+            }
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 try {
                     String letter = presenter.getTopItemName(getListView());
                     setTextToSectionStrip(letter);
-                } catch (NullPointerException | ClassCastException ignored) { }
+                } catch (NullPointerException | ClassCastException ignored) {
+                }
             }
         });
-        getListView().setSelection(ONE); // to hide first section by default
+        getListView().setSelection(position); // to hide first section by default
     }
 
     public void setPresenter() {
-        presenter = new IndexedListPresenter(indexedList,sideIndex);
+        presenter = new IndexedListPresenter(indexedList, sideIndex, keepScrollPosition);
         presenter.setSideIndexListener(new SideIndexListener() {
             @Override
             public void onClickIndexListener(Pair pair) {
-                if (null != pair){
+                if (null != pair) {
                     String letter = (String) pair.first;
                     int indexTop = (int) pair.second;
                     getListView().setSelection(indexTop);
@@ -106,11 +130,11 @@ public final class IndexedListFragment extends ListFragment {
         });
     }
 
-    private void setTextToSectionStrip (String letter){
+    private void setTextToSectionStrip(String letter) {
         if (null != letter) sectionStrip.setText(letter);
     }
 
-    private void setSectionStrip(){
+    private void setSectionStrip() {
         sectionStrip.setTextSize(indexedList.getSectionTextSize());
         sectionStrip.setTextColor(ContextCompat.getColor(context, indexedList.getResColorStrip()));
         sectionStrip.setBackgroundColor(ContextCompat.getColor(context, indexedList.getResBackgroundColorIdStrip()));
@@ -120,11 +144,11 @@ public final class IndexedListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         if (null != indexedList.getIndexedListListener())
-            indexedList.getIndexedListListener().onClickListItem(v,position,id);
+            indexedList.getIndexedListListener().onClickListItem(v, position, id);
     }
 
     private void setListByData() {
-        presenter.setRows(getListView(),indexedList.getItems());
+        presenter.setRows(getListView(), indexedList.getItems());
     }
 
     public void setIndexedList(IndexedList indexedList) {

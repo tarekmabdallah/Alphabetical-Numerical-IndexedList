@@ -16,15 +16,38 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public class ItemIndexedList extends RowInList {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ItemIndexedList extends RowInList implements Parcelable {
+
     private String name;
     private String parent;
     private int index;
 
-    public ItemIndexedList(){}
+    protected ItemIndexedList() {
+    }
 
     public ItemIndexedList(String name) {
         this.name = name;
+    }
+
+    public static final Creator<ItemIndexedList> CREATOR = new Creator<ItemIndexedList>() {
+        @Override
+        public ItemIndexedList createFromParcel(Parcel in) {
+            return new ItemIndexedList(in);
+        }
+
+        @Override
+        public ItemIndexedList[] newArray(int size) {
+            return new ItemIndexedList[size];
+        }
+    };
+
+    private ItemIndexedList(Parcel in) {
+        name = in.readString();
+        parent = in.readString();
+        index = in.readInt();
     }
 
     public String getName() {
@@ -35,19 +58,31 @@ public class ItemIndexedList extends RowInList {
         return index;
     }
 
-    public void setName(String categoryName) {
-        this.name = categoryName;
+    public String getParent() {
+        return parent;
     }
 
     public void setIndex(int index) {
         this.index = index;
     }
 
-    public String getParent() {
-        return parent;
+    public void setName(String categoryName) {
+        this.name = categoryName;
     }
 
     public void setParent(String parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(parent);
+        dest.writeInt(index);
     }
 }

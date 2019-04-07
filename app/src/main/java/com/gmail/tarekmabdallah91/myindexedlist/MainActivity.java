@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 .setResFrameLayout(R.id.list_fragment)
                 .setNumericalList(NUMERICAL_LIST)
                 .seItemsList(getDaysList())
-             //   .setAlphabeticalList(LATIN_ALPHABET)
-               // .seItemsList(getDesignersList())
+                //.setAlphabeticalList(LATIN_ALPHABET)
+                //  .seItemsList(getDesignersList())
                 .setDimmedColorInSideIndex(android.R.color.holo_red_dark)
                 .setItemsSizeSideIndex(10f)
                 .setItemsTextSize(12f)
@@ -78,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
         newListLetters.remove("G");
         newListLetters.remove("V");
         for (String letter : newListLetters) {
-            int NUMBER_OF_ITEMS_IN_SECTION = 10;
+            int NUMBER_OF_ITEMS_IN_SECTION = 9;
             for (int i = 1; i <= NUMBER_OF_ITEMS_IN_SECTION; i++) {
-                contacts.add(new ItemIndexedList(letter + i));
+                ItemIndexedList item = new ItemIndexedList(letter + i);
+                item.setParent(letter);
+                contacts.add(item);
             }
         }
         contacts.add(new ItemIndexedList("@@@"));
@@ -95,7 +97,9 @@ public class MainActivity extends AppCompatActivity {
         for (String letter : newListLetters) {
             int NUMBER_OF_ITEMS_IN_SECTION = 10;
             for (int i = 1; i <= NUMBER_OF_ITEMS_IN_SECTION; i++) {
-                days.add(new ItemIndexedList(letter + i));
+                ItemIndexedList item = new ItemIndexedList(letter + i);
+                item.setParent(letter);
+                days.add(item);
             }
         }
         return days;

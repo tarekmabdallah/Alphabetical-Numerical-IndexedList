@@ -53,15 +53,17 @@ final class IndexedListPresenter {
     private final HashMap<String, Integer> occurrences = new HashMap<>();
     private SideIndexListener sideIndexListener;
     private IndexedListAdapter indexedListAdapter;
-    private Context context;
+    private final IndexedListAdapter.KeepScrollPosition keepScrollPosition;
+    private final Context context;
     private List<RowInList> listOfContactsAndSections;
-    private LinearLayout sideIndex;
-    private IndexedList indexedList;
+    private final LinearLayout sideIndex;
+    private final IndexedList indexedList;
 
-    IndexedListPresenter(IndexedList indexedList, LinearLayout sideIndex) {
+    IndexedListPresenter(IndexedList indexedList, LinearLayout sideIndex, IndexedListAdapter.KeepScrollPosition keepScrollPosition) {
         this.indexedList = indexedList;
         this.context = indexedList.getActivity();
         this.sideIndex = sideIndex;
+        this.keepScrollPosition = keepScrollPosition;
         rows = new ArrayList(); // for sections and items
         setListLetters();
         if (indexedList.isAlphabetical()) setAlphabeticalIndices();
@@ -80,6 +82,7 @@ final class IndexedListPresenter {
             indexedListAdapter = new IndexedListAdapter();
         }
         indexedListAdapter.setIndexedList(indexedList);
+        indexedListAdapter.setKeepScrollPosition(keepScrollPosition);
     }
 
     private void setAlphabeticalIndices() {

@@ -28,7 +28,9 @@ import com.gmail.tarekmabdallah91.indexedlistview.R;
 import com.gmail.tarekmabdallah91.indexedlistview.models.ItemIndexedList;
 import com.gmail.tarekmabdallah91.indexedlistview.models.RowInList;
 import com.gmail.tarekmabdallah91.indexedlistview.models.SectionIndexedList;
+
 import java.util.List;
+
 import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ONE;
 import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.TWO;
 import static com.gmail.tarekmabdallah91.indexedlistview.IndexedListModel.IndexedListPresenter.ZERO;
@@ -37,6 +39,7 @@ public class IndexedListAdapter extends BaseAdapter {
 
     private List rows;
     private IndexedList indexedList;
+    private KeepScrollPosition keepScrollPosition;
 
     @Override
     public int getCount() {
@@ -79,16 +82,16 @@ public class IndexedListAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.item_row, parent, false);
             }
         }
-        if (view != null){
+        if (view != null) {
             TextView textView = view.findViewById(R.id.row_tv);
             if (itemViewType == ZERO) { // Item
                 final ItemIndexedList currentCategory = (ItemIndexedList) getItem(position);
                 name = currentCategory.getName();
-                if (name!= null) {
+                if (name != null) {
                     textView.setText(name);
                     textView.setTextSize(indexedList.getItemsTextSize());
-                    textView.setTextColor(ContextCompat.getColor(context,indexedList.getResColorItem()));
-                    textView.setPadding((int) context.getResources().getDimension(R.dimen.space8),ZERO,ZERO,ZERO);
+                    textView.setTextColor(ContextCompat.getColor(context, indexedList.getResColorItem()));
+                    textView.setPadding((int) context.getResources().getDimension(R.dimen.space8), ZERO, ZERO, ZERO);
                 }
                 view.setTag(currentCategory);
             } else { // Section
@@ -108,5 +111,25 @@ public class IndexedListAdapter extends BaseAdapter {
 
     void setIndexedList(IndexedList indexedList) {
         this.indexedList = indexedList;
+    }
+
+    public void setKeepScrollPosition(KeepScrollPosition keepScrollPosition) {
+        this.keepScrollPosition = keepScrollPosition;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        try {
+            int position = keepScrollPosition.getCurrentPosition();
+            super.notifyDataSetChanged();
+            keepScrollPosition.scrollToPosition(position);
+        } catch (NullPointerException ignored) {
+        }
+    }
+
+    interface KeepScrollPosition {
+        int getCurrentPosition();
+
+        void scrollToPosition(int position);
     }
 }

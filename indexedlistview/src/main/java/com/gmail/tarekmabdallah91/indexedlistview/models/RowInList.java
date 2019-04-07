@@ -16,4 +16,5 @@
 
 package com.gmail.tarekmabdallah91.indexedlistview.models;
 
-public abstract class RowInList {}
+public abstract class RowInList {
+}
